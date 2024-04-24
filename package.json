@@ -1,0 +1,26 @@
+{
+  "name": "webgl-persona-gallery",
+  "author": "Jaime Pericas",
+  "license": "UNLICENSED",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.0",
+    "vite-plugin-glsl": "^1.3.0"
+  },
+  "dependencies": {
+    "regl": "^2.1.0"
+  },
+  "main": "dist/webgl-persona-gallery.es.js",
+  "module": "dist/webgl-persona-gallery.es.js",
+  "types": "dist/webgl-persona-gallery.d.ts"
+}

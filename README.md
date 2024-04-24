@@ -1,5 +1,4 @@
-
-
+Entry interface
 ```ts
 interface Entry {
   title: string

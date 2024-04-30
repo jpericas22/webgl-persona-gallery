@@ -2,7 +2,6 @@
   "name": "webgl-persona-gallery",
   "author": "Jaime Pericas",
   "license": "UNLICENSED",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {

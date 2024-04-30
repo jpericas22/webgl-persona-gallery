@@ -31,6 +31,7 @@ export class WebGLGallery {
   private isMobile = false
 
   constructor(target: HTMLElement, entries: Entry[]) {
+    if (entries.length === 0) throw new Error('No entries provided')
     this.regl = REGL(target)
     this.target = target
     this.entries = entries

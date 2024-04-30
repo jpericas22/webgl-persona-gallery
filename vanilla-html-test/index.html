@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>
+            Test UMD
+        </title>
+    </head>
+    <body>
+        <div id="test" width="200" height="200"></div>
+        <script type="module">
+            import { WebGLGallery } from './webgl-persona-gallery.regl.es.js';
+            new WebGLGallery(document.querySelector('#test'), [
+                {
+                    title: 'Persona 1',
+                    description: 'Persona 1 description',
+                    imageUrl: '/1.jpg'
+                }
+            ]
+            );
+        </script>
+    </body>

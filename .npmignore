@@ -1,6 +1,6 @@
 node_modules/
 dist-regl/
-test/
+vanilla-html-test/
 package-lock.json
 bun.lockb
 yarn.lock

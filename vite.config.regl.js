@@ -15,16 +15,17 @@ export default defineConfig({
         lib: {
             entry: 'src/main.ts',
             name: 'WebGLPersonaGallery',
-            fileName: (format) => `webgl-persona-gallery.${format}.js`,
+            fileName: (format) => `webgl-persona-gallery.regl.${format}.js`,
             formats: ['es'],
         },
         rollupOptions: {
-            external: ['regl'],
+            external: [],
             output: {
                 globals: {
                     regl: 'REGL'
                 }
             }
-        }
+        },
+        outDir: 'dist-regl/',
     }
 });

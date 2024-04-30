@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
+    "build-regl": "tsc && vite build --config vite.config.regl.js",
     "preview": "vite preview"
   },
   "devDependencies": {

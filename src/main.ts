@@ -60,7 +60,10 @@ export class WebGLGallery {
   private calculateMousePosition(event: { clientX: number; clientY: number; }) {
     const aspectRatio = this.resolution[0] / this.resolution[1]
     const division = 1.0 / this.rows
-    return [(event.clientX / this.resolution[0]) * aspectRatio, event.clientY / this.resolution[1]].map((value) => {
+    const targetBounds = this.target.getBoundingClientRect()
+    const x = event.clientX - targetBounds.left
+    const y = event.clientY - targetBounds.top
+    return [(x / this.resolution[0]) * aspectRatio, y / this.resolution[1]].map((value) => {
       return Math.floor(value * this.rows) * division + division * 0.5
     }) as [number, number]
   }

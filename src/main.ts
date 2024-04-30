@@ -29,6 +29,7 @@ export class WebGLGallery {
   private marginOffset = 0.4
   private shouldUpdateMouse = true
   private isMobile = false
+  private isFirstMovement = true
 
   constructor(target: HTMLElement, entries: Entry[]) {
     if (entries.length === 0) throw new Error('No entries provided')
@@ -80,6 +81,11 @@ export class WebGLGallery {
 
 
   private onMouseMove = (event: { clientX: number; clientY: number; type?: string }) => {
+    if (this.isFirstMovement) {
+      this.fisheyeTarget = 1.0
+      this.shouldUpdateMouse = true
+      this.isFirstMovement = false
+    }
     if (!this.shouldUpdateMouse) return
     this.mouseTarget = this.calculateMousePosition(event)
     if (event.type === 'click' && this.isMobile) {

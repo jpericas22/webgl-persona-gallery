@@ -8,7 +8,6 @@ export interface Entry {
   imageUrl: string
 }
 
-
 export class WebGLGallery {
   private regl: REGL.Regl
   private target: HTMLElement
@@ -30,6 +29,9 @@ export class WebGLGallery {
   private shouldUpdateMouse = true
   private isMobile = false
   private isFirstMovement = true
+  private sourceTextureRows = 1
+  private sourceTextureCols = 1
+  private seed = Math.random() * 10.0;
 
   constructor(target: HTMLElement, entries: Entry[]) {
     if (entries.length === 0) throw new Error('No entries provided')
@@ -120,40 +122,54 @@ export class WebGLGallery {
       image.src = entry.imageUrl
       return new Promise<HTMLImageElement>((resolve) => image.onload = () => resolve(image))
     }))
+
+    // get max texture size
+    const maxTextureSize = this.regl.limits.maxTextureSize
+    this.sourceTextureRows = Math.min(images.length, Math.floor(maxTextureSize / images[0].width))
+    this.sourceTextureCols = Math.ceil(images.length / this.sourceTextureRows)
+    
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')!
-    canvas.width = images[0].width * images.length
-    canvas.height = images[0].height
-    images.forEach((image, i) => {
-      ctx.drawImage(image, i * image.width, 0)
-    })
-    this.spriteSheet = this.regl.texture(canvas)
+    canvas.width = this.sourceTextureRows * images[0].width
+    canvas.height = this.sourceTextureCols * images[0].height
 
     const textCanvas = document.createElement('canvas')
     const textCtx = textCanvas.getContext('2d')!
+    textCanvas.width = canvas.width
+    textCanvas.height = canvas.height
+
     textCtx.imageSmoothingEnabled = true
     textCtx.imageSmoothingQuality = 'high'
     textCtx.globalCompositeOperation = 'source-over'
-
-    const textUpscale = 4.0
-    textCanvas.width = images[0].width * images.length * textUpscale
-    textCanvas.height = images[0].height * textUpscale
-
     textCtx.fillStyle = '#222222'
     textCtx.fillRect(0, 0, textCanvas.width, textCanvas.height)
     textCtx.textAlign = 'center'
     textCtx.textBaseline = 'middle'
-    this.entries.forEach((entry, i) => {
+    const textSize = [images[0].width / 6.4, images[0].width / 12.8]
+    const textYOffset = [-images[0].width / 64.0, images[0].width / 8.0]
+    const textOffset = [images[0].width * 0.5, images[0].height * 0.5]
+
+    images.forEach((image, i) => {
+      const entry = this.entries[i]
+
+      const x = (i % this.sourceTextureRows) * images[0].width
+      const y = Math.floor(i / this.sourceTextureRows) * images[0].height
+
+      ctx.drawImage(image, x, y)
+
       textCtx.fillStyle = '#ffffff'
-      textCtx.font = '80px sans-serif'
-      textCtx.fillText(entry.title, i * images[0].width * textUpscale + images[0].width * 2, images[0].height * 2 - 10)
+      textCtx.font = `${textSize[0]}px sans-serif`
+      textCtx.fillText(entry.title, x + textOffset[0], y + textOffset[1] + textYOffset[0])
+
       textCtx.fillStyle = '#bbbbbb'
-      textCtx.font = '40px sans-serif'
-      textCtx.fillText(entry.description, i * images[0].width * textUpscale + images[0].width * 2, images[0].height * 2 + 70)
+      textCtx.font = `${textSize[1]}px sans-serif`
+      textCtx.fillText(entry.description, x + textOffset[0], y + textOffset[1] + textYOffset[1])
     })
+    this.spriteSheet = this.regl.texture(canvas)
     textCtx.filter = 'blur(1px)'
     textCtx.drawImage(textCanvas, 0, 0, textCanvas.width, textCanvas.height)
     this.textSpriteSheet = this.regl.texture(textCanvas)
+
     this.setupEventListeners()
     this.render()
     this.resizeObserver = new ResizeObserver(this.onResize)
@@ -195,6 +211,9 @@ export class WebGLGallery {
         animateXOffset: this.animateXOffset,
         marginOffset: this.marginOffset,
         fisheye_value: this.fisheye,
+        source_texture_rows: this.sourceTextureRows,
+        source_texture_cols: this.sourceTextureCols,
+        seed: this.seed,
       },
       count: 6,
     })()

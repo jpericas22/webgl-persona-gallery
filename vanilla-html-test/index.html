@@ -3,18 +3,22 @@
         <title>
             Test UMD
         </title>
+        <style>
+            #test {
+                max-width: 1024px;
+            }
+        </style>
     </head>
     <body>
-        <div id="test" width="200" height="200"></div>
+        <div id="test"></div>
         <script type="module">
             import { WebGLGallery } from './webgl-persona-gallery.regl.es.js';
-            new WebGLGallery(document.querySelector('#test'), [
-                {
-                    title: 'Persona 1',
-                    description: 'Persona 1 description',
-                    imageUrl: '/1.jpg'
-                }
-            ]
-            );
+            // construct 30 entries
+            const entries = Array.from({ length: 30 }, (_, i) => ({
+                title: `Persona ${i + 1}`,
+                description: `${i + 1} description`,
+                imageUrl: `/img/${i + 1}.jpg`
+            }));
+            new WebGLGallery(document.querySelector('#test'), entries);
         </script>
     </body>

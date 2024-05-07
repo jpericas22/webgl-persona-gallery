@@ -25,6 +25,9 @@ export declare class WebGLGallery {
     private shouldUpdateMouse;
     private isMobile;
     private isFirstMovement;
+    private sourceTextureRows;
+    private sourceTextureCols;
+    private seed;
     constructor(target: HTMLElement, entries: Entry[]);
     private setupEventListeners;
     private calculateMousePosition;
